@@ -27,27 +27,21 @@
     <main role="main">
       <article id="webslides" class="vertical">
 
-        <!-- Quick Guide
-          - Each parent <section> in the <article id="webslides"> element is an individual slide.
-          - Vertical sliding = <article id="webslides" class="vertical">
-          - <div class="wrap"> = container 90% / <div class="wrap size-50"> = 45%;
-        --> 
-
         <section>
-          <!--.wrap = container (width: 90%) -->
           <div class="wrap aligncenter">
-            <h1 class="text-landing zoomIn">Jirabot</h1>
+            <h1 class="text-landing zoomIn">заБ<i class="fab fa-telegram"></i>Тимся о проекте</h1>
             <p class="text-intro zoomIn" >
               Солдатов Анатолий<br>
               <img src="static/images/logo.jpg" style="width: 100px; height: 130px; border-radius: 40%;">
             </p>
-
           </div>
-          <!-- .end .wrap -->
         </section>
           
         <section>
           <div class="wrap">
+            <div class="content">
+              <h2>Инфраструктура</h2>
+            </div>  
             <ul class="flexblock features">
               <li>
                 <div>
@@ -109,22 +103,18 @@
           <!-- .end .embed -->
           <div class="wrap aligncenter">
             <h2><strong>Зачем нужна инфраструктура</strong></h2>
-            <p>Разработали крутой мессенджер, а его заблокировали или пытаются взломать</p>
           </div>
           <!-- .end .wrap -->
         </section>
 
         <section class="fullscreen bg-blue">
-          <!-- Fullscreen Video -->
           <div class="embed dark">
             <div data-youtube data-youtube-id="ksOwanrnH74" data-autoplay data-loop data-mute data-no-controls></div>
           </div>
           <!-- .end .embed -->
           <div class="wrap aligncenter">
             <h2><strong>ГИС ЖКХ</strong></h2>
-            <p>Почти все регионы России, 125 миллионов лицевых счетов, десятки терабайт данных</p>
           </div>
-          <!-- .end .wrap -->
         </section>
           
         <section>
@@ -136,7 +126,9 @@
                 <summary>Правильный ответ</summary>  
                 <pre>Данные. И тем и другим нужны данные.</pre>
               </details>
-              
+            <div>
+                <img src="static/images/grafik_serdce.jpg">
+              </div>  
             </div>
             <!-- end .content-left -->
             <div class="content-right">
@@ -200,7 +192,6 @@
             <div class="grid vertical-align">
               <div class="column">
                 <h3 style="margin-right: auto;"><strong>Прототип за ночь</strong></h3>
-                <p class="text-intro" style="margin-right: auto;">(иногда даже работает)</p>
               </div>
                 <div class="column"></div>
               <!-- .end .column -->
@@ -210,46 +201,169 @@
           <!-- .end .wrap -->
         </section>  
 
+          
+        <section>
+          <div class="wrap">
+            <div class="content">
+                <img src="static/images/jirabot_in_action.png">
+            </div>
+          </div>
+        </section>
+          
         <section>
           <div class="wrap">
             <div class="content-left">
-              <h3>Jirabot</h3>
-            <br>    
-              <p style="margin-top: 40px; font-size: 22px;">
-            1. Расширяемый под другие БД и задачи <br>
-            2. Есть документация <br>
-            3. Больше одного разработчика </p>
-              
+              <h3>Боты </h3>
+                <br>
+                <div>
+                    <h3>Jirabot</h3>
+                    <p>
+                    1. Интерфейс – JIRA <br>
+                    4. Не банят :)
+                    </p>
+                    <img src="static/images/jirabot.jpg" style="width: 400px; height: 400px;">    
+                </div>
+                <br><br><br>
             </div>
             <!-- end .content-left -->
             <div class="content-right">
-              <!-- <div class="embed"> = Responsive -->
               <div>
-                <img src="static/images/jirabot.jpg">
-              </div>
-              <!-- end .embed -->
+                <img src="static/images/block.jpg" style="width: 600px; height: 300px;">
+                <br><br><br>
+                <h3>Telegram</h3>
+                    <p>
+                    1. Интерфейс – Telegram <br>
+                    2. Банят, но не совсем :) <br>
+
+                    </p>  
+              </div>   
             </div>
             <!-- end .content-left -->
           </div>
           <!-- .end .wrap -->
-        </section>       
+        </section>
+          
+        <section class="aligncenter">
+          <div class="wrap">
+            <div class="content">
+                <div>
+                    <h3>Highload</h3>
+                </div>
+            </div>
+            <div class="content">
+              <div>
+                <img src="static/images/donkey-heavyload.png" style="width: 600px; height: 300px;"> 
+              </div>   
+            </div>
+            <!-- end .content-left -->
+          </div>
+          <!-- .end .wrap -->
+        </section>
+          
+        <section>
+          <div class="wrap">
+            <div class="content-left">
+            <h3>Jirabot</h3>    
+<pre style="font-size:14px;">@app.route('/')
+@login_required
+@log_action
+def tasks():
+    # parse helpdesk tasks
+    jira = get_jira_connection('helpdesk')
+    task_list = list()
+    task_list += jira.parse_issues(JIRA_HELPDESK_SEARCH_CONDITION)
+    # parse lanit tasks
+    jira = get_jira_connection('lanit')
+    try:
+        task_list += jira.parse_issues(JIRA_LANIT_SEARCH_CONDITION)
+    except IndexError:
+        pass
+    return render_template('tasks/tasks.html', tasks=task_list), 'Rendering template tasks/tasks.html'
 
+@app.route('/get_query_cost', methods=['GET'])
+@login_required
+@log_action
+def get_query_cost():
+    arguments = request.args.to_dict()
+    try:
+        c = get_database_connection(arguments['dbname'])
+        cost = c.get_query_plan(arguments['query'])
+    except Exception as e:
+        resp = {"result": {
+            "message": str(e)
+        }}
+        return jsonify(resp), str(e)
+    resp = {"result": {
+        "message": cost[0][0][0]['Plan']['Total Cost']
+    }}
+    return jsonify(resp), 'Task finished.'</pre>
+            </div>
+            <div class="content-right">
+              <div class="column">
+                <h3>Telegram</h3>  
+                <pre style="font-size:14px;"># Создание задачи: имя задачи в Jira; имя базы данных; текст запроса
+# Удаление задачи: имя задачи в Jira
+def handle_updates(updates):
+    for update in updates["result"]:
+        try:
+            text = update["message"]["text"]
+            chat = update["message"]["chat"]["id"]
+
+            try:
+                jira_task, database_name, query = text.split(";")
+                jira_task = re.sub(r"\s+", "", jira_task)
+                database_name = re.sub(r"\s+", "", database_name)
+            except Exception as e:
+                jira_task, database_name, query = [text, None, None]
+
+            database_result = db.get_items()
+            jira_tasks = [task[0] for task in database_result]
+            print(jira_tasks)
+
+            if text == "delete":
+                keyboard = build_keyboard(jira_tasks)
+                send_message("Select task to delete", chat, keyboard)
+            elif jira_task in jira_tasks:
+                db.delete_item(jira_task)
+            elif jira_task is not None and database_name is not None and query is not None:
+                db.add_item(jira_task, database_name, query)
+
+        except KeyError:
+            pass</pre>
+              </div>   
+            </div>
+            <!-- end .content-left -->
+          </div>
+          <!-- .end .wrap -->
+        </section>          
+
+        <section>
+          <div class="wrap">
+            <div class="content-left">
+                <h3>Jirabot</h3>
+                <img src="static/images/jirabot_Web.png" style="width: 700px; height: 400px;">  
+            </div>
+            <!-- end .content-left -->
+            <div class="content-right">
+                <h3>Telegram</h3>
+                <img src="static/images/telegram.png" style="width: 400px; height: 400px;">  
+              </div>   
+            </div>
+          <!-- .end .wrap -->
+        </section>
+          
         <section class="bg-black aligncenter">
           <span class="background light" style="background-image:url('https://images.unsplash.com/photo-1481926843113-ac9cb3fb9c8f?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=7d4cbe6845ddba7e4ddcd8fa84abc0d8&auto=format&fit=crop&w=1500&q=80')"></span>
           <div class="wrap size-50">
             <h1 class="text-landing text-shadow">PROFIT</h1>
-
-              
-            
           </div>
         </section>          
           
         <section class="aligncenter bg-black">
           <span class="background anim" style="background-image:url('https://source.unsplash.com/n9WPPWiPPJw/')"></span>
-          <!--.wrap = container (width: 90%) -->
           <div class="wrap">
             <h2>Спасибо за ваше время!</h2>
-            <p>Вопросы?</p>  
+            <p>А еще у меня есть стикеры :)</p>  
           </div>
           <!-- .end .wrap -->
         </section>
